@@ -9,19 +9,19 @@ class AsistenController extends BaseController
 {
     public function index()
     {
-        $post = $this->request->getPost(['usr']);
+        $model = model(AsistenModel::class);
+        $data = [
+            'list' => $model->getAsisten(),
+            'title' => 'Daftar Asisten'
+        ];
+
         $session = session();
-        if ($session->has('pengguna')) {
-            $item = $session->get('pengguna');
-            if ($item == $post['usr']) { //mengecek apakah user atau bukan
-                $model = model(AsistenModel::class);
-                return view('AsistenView');
-            } else {
-                return view('asisten/loginform');
-            }
-        } else {
+
+        // Mengecek apakah sesi pengguna ada
+        if (!$session->has('pengguna')) {
             return view('asisten/loginform');
         }
+        return view('asisten/AsistenView', $data);
     }
 
     public function simpan()
@@ -32,7 +32,7 @@ class AsistenController extends BaseController
         // Mengecek apakah sesi pengguna ada
         if (!$session->has('pengguna')) {
             // Menyimpan URL saat ini dalam sesi untuk diarahkan setelah login
-            $session->set('redirect_url', 'asisten/simpan');
+            $session->set('url', 'asisten/simpan'); //menyimpna asisten/asisten ke variabel url
             return view('asisten/loginform');
         }
 
@@ -55,7 +55,7 @@ class AsistenController extends BaseController
         // Mengecek apakah sesi pengguna ada
         if (!$session->has('pengguna')) {
             // Menyimpan URL saat ini dalam sesi untuk diarahkan setelah login
-            $session->set('redirect_url', 'asisten/update');
+            $session->set('url', 'asisten/update');
             return view('asisten/loginform');
         }
 
@@ -83,7 +83,7 @@ class AsistenController extends BaseController
         // Mengecek apakah sesi pengguna ada
         if (!$session->has('pengguna')) {
             // Menyimpan URL saat ini dalam sesi untuk diarahkan setelah login
-            $session->set('redirect_url', 'asisten/delete');
+            $session->set('url', 'asisten/delete');
             return view('asisten/loginform');
         }
 
@@ -137,18 +137,20 @@ class AsistenController extends BaseController
         if ($user && $pass) {
             $session = session();
             $session->set('pengguna', $post['usr']);
-            // return view('AsistenView', $data);
-            $redirectURL = $session->get('redirect_url');
+            $redirectURL = $session->get('url');
             if ($redirectURL) {
-                $session->remove('redirect_url'); // Menghapus URL redirect setelah digunakan
+                $session->remove('url'); // Menghapus URL redirect setelah digunakan
                 return redirect()->to($redirectURL);
             } else {
-                return view('AsistenView', $data);;
+                return view('asisten/AsistenView', $data);
             }
         } else {
-            echo "Username atau Password anda salah !";
-            echo "<br>";
+            echo '<h1 style="text-align:center; color:red";>';
+            echo "! USERNAME atau PASSWORD ANDA SALAH !";
+            echo '</h1>';
+            echo '<h3 style="text-align:center;">';
             echo "Silahkan Masukan Kembali !";
+            echo '</h3>';
             return view('asisten/loginform');
         }
     }
