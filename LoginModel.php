@@ -8,8 +8,6 @@ class LoginModel extends Model
 {
     protected $table = 'login';
 
-    protected $asisten;
-
     protected $allowedFields = ['Username', 'Password'];
 
     public function ambil($user) //dipanggil ke controller
