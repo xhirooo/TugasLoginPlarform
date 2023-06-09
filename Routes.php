@@ -42,7 +42,7 @@ $routes->setAutoRoute(true);
 // $routes->get('login/home', [Login::class, 'home']);
 // $routes->get('login/logout', [Login::class, 'logout']);
 
-//tugas tgl 30
+//tugas login
 $routes->get('asisten', 'AsistenController::index');
 $routes->match(['get', 'post'], 'asisten/simpan', [AsistenController::class, 'simpan']);
 $routes->match(['get', 'post'], 'asisten/update', [AsistenController::class, 'update']);
